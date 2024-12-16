@@ -1,0 +1,464 @@
+basePath: /
+definitions:
+  blog.CreateBlogRequest:
+    properties:
+      content:
+        example: This is the content of the blog.
+        type: string
+      cover_image:
+        type: string
+      status:
+        type: string
+      title:
+        example: My First Blog
+        type: string
+    type: object
+  category.CreateCategoryRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    type: object
+  menu.CreateMenuRequest:
+    properties:
+      name:
+        example: Main Menu
+        type: string
+      parent_id:
+        example: 1
+        type: integer
+    type: object
+  response.APIResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: your-email@example.com
+    name: Your Name
+    url: https://your-website.com
+  description: This is a simple CMS API with blog and menu features.
+  title: CMS Project API
+  version: "1.0"
+paths:
+  /blogs:
+    get:
+      description: Retrieve all blogs with pagination
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of blogs per page
+        in: query
+        name: limit
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+      summary: Get all blogs
+      tags:
+      - Blog
+    post:
+      description: Add a new blog with title and content to the database
+      parameters:
+      - description: Blog data
+        in: body
+        name: blog
+        required: true
+        schema:
+          $ref: '#/definitions/blog.CreateBlogRequest'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+      summary: Create anew blog
+      tags:
+      - Blog
+  /blogs/{id}:
+    delete:
+      description: Remove a blog from the database
+      parameters:
+      - description: Blog ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+      summary: Delete a blog
+      tags:
+      - Blog
+    get:
+      description: Retrieve a specific blog using its ID
+      parameters:
+      - description: Blog ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+      summary: Get a blog by ID
+      tags:
+      - Blog
+    put:
+      consumes:
+      - application/json
+      description: Update a blog's title and content using its ID
+      parameters:
+      - description: Blog ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Blog data to update
+        in: body
+        name: blog
+        required: true
+        schema:
+          $ref: '#/definitions/blog.CreateBlogRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+      summary: Update a blog
+      tags:
+      - Blog
+  /blogs/search:
+    get:
+      description: Search blogs by title or content using a keyword
+      parameters:
+      - description: Keyword to search for
+        in: query
+        name: keyword
+        required: true
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of blogs per page
+        in: query
+        name: limit
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+      summary: Search blogs
+      tags:
+      - Blog
+  /categories:
+    get:
+      description: Retrieve all categories
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+      summary: Get all categories
+      tags:
+      - Category
+    post:
+      consumes:
+      - application/json
+      description: Add a new category to the database
+      parameters:
+      - description: Category data
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/category.CreateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+      summary: Create a new category
+      tags:
+      - Category
+  /categories/{id}:
+    delete:
+      description: Remove a category from the database
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+      summary: Delete a category
+      tags:
+      - Category
+    get:
+      description: Retrieve a specific category using its ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+      summary: Get a category by ID
+      tags:
+      - Category
+  /menus:
+    get:
+      description: Retrieve all menus, optionally filter by parent_id
+      parameters:
+      - description: Parent menu ID
+        in: query
+        name: parent_id
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+      summary: Get all menus
+      tags:
+      - Menu
+    post:
+      description: Add a new menu to the database
+      parameters:
+      - description: Menu data
+        in: body
+        name: menu
+        required: true
+        schema:
+          $ref: '#/definitions/menu.CreateMenuRequest'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+      summary: Create a new menu
+      tags:
+      - Menu
+  /menus/{id}:
+    delete:
+      description: Remove a menu from the database
+      parameters:
+      - description: Menu ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+      summary: Delete a menu
+      tags:
+      - Menu
+    get:
+      description: Retrieve a specific menu using its ID
+      parameters:
+      - description: Menu ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+      summary: Get a menu by ID
+      tags:
+      - Menu
+    put:
+      description: Update a menu's name or parent_id using its ID
+      parameters:
+      - description: Menu ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Menu data to update
+        in: body
+        name: menu
+        required: true
+        schema:
+          $ref: '#/definitions/menu.CreateMenuRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+      summary: Update a menu
+      tags:
+      - Menu
+  /menus/filter:
+    get:
+      description: Retrieve menus filtered by parent_id
+      parameters:
+      - description: Parent menu ID
+        in: query
+        name: parent_id
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+      summary: Filter menus
+      tags:
+      - Menu
+swagger: "2.0"
