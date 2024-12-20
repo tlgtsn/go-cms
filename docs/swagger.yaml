@@ -2,12 +2,18 @@ basePath: /
 definitions:
   blog.CreateBlogRequest:
     properties:
+      author_id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
       content:
         example: This is the content of the blog.
         type: string
       cover_image:
+        example: https://example.com/image.jpg
         type: string
       status:
+        description: draft, published
+        example: draft
         type: string
       title:
         example: My First Blog
@@ -16,8 +22,10 @@ definitions:
   category.CreateCategoryRequest:
     properties:
       description:
+        example: All about technology
         type: string
       name:
+        example: Technology
         type: string
     type: object
   menu.CreateMenuRequest:
@@ -181,6 +189,42 @@ paths:
           schema:
             $ref: '#/definitions/response.APIResponse'
       summary: Update a blog
+      tags:
+      - Blog
+  /blogs/{id}/categories:
+    post:
+      description: Associate a category with a blog
+      parameters:
+      - description: Blog data
+        in: body
+        name: blog
+        required: true
+        schema:
+          $ref: '#/definitions/blog.CreateBlogRequest'
+      - description: Blog ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Category ID
+        in: query
+        name: category_id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+      summary: Add a category to a blog
       tags:
       - Blog
   /blogs/search:

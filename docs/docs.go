@@ -275,6 +275,60 @@ const docTemplate = `{
                 }
             }
         },
+        "/blogs/{id}/categories": {
+            "post": {
+                "description": "Associate a category with a blog",
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "Add a category to a blog",
+                "parameters": [
+                    {
+                        "description": "Blog data",
+                        "name": "blog",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/blog.CreateBlogRequest"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Blog ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Category ID",
+                        "name": "category_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.APIResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.APIResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.APIResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/categories": {
             "get": {
                 "description": "Retrieve all categories",
@@ -652,15 +706,22 @@ const docTemplate = `{
         "blog.CreateBlogRequest": {
             "type": "object",
             "properties": {
+                "author_id": {
+                    "type": "string",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
                 "content": {
                     "type": "string",
                     "example": "This is the content of the blog."
                 },
                 "cover_image": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "https://example.com/image.jpg"
                 },
                 "status": {
-                    "type": "string"
+                    "description": "draft, published",
+                    "type": "string",
+                    "example": "draft"
                 },
                 "title": {
                     "type": "string",
@@ -672,10 +733,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "All about technology"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Technology"
                 }
             }
         },
